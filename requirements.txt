@@ -3,3 +3,4 @@ requests
 pypdf
 docx2txt
 google-generativeai
+flask
