@@ -9,17 +9,15 @@ import docx2txt
 import google.generativeai as genai
 import time
 
-# 1. Flask serverni sozlash (Render o'chib qolmasligi uchun)
 app = Flask('')
 
 @app.route('/')
 def home():
-    return "OK, bot is running!"
+    return "OK"
 
 def run_flask():
     app.run(host='0.0.0.0', port=10000)
 
-# 2. Telegram Bot va Gemini sozlamalari
 bot = telebot.TeleBot("8678420801:AAGN8Z0EkieIDSrhxXd6EaJX5r187Q49AAc")
 genai.configure(api_key="AQ.Ab8RN6JLw41xz9wj_IBP9on21D6PaIMX8qH1sqPm12y2Cf-x2Q")
 model = genai.GenerativeModel("gemini-2.0-flash")
@@ -54,22 +52,18 @@ def reply(m):
             res = model.generate_content(f"{prompt}\n\nHujjat matni:\n{text}").text
             bot.reply_to(m, res, parse_mode="Markdown")
     except Exception as e:
-        print(f"Xatolik yuz berdi: {e}")
+        print(f"XABAR YUBORISHDA XATOLIK: {e}")  # <--- Mana shu yerda xato chiqadi!
 
-# 3. Botni alohida potokda (Thread) ishga tushirish funksiyasi
 def run_bot():
     while True:
         try:
             bot.polling(none_stop=True, interval=0, timeout=20)
         except Exception as e:
+            print(f"POLLING XATOLIK: {e}")  # <--- Yoki bu yerda
             time.sleep(5)
 
-# 4. Ikkalasini ham parallel ravishda parallel yurgizish
 if __name__ == "__main__":
-    # Botni orqa fonda boshlaymiz
     bot_thread = threading.Thread(target=run_bot)
     bot_thread.daemon = True
     bot_thread.start()
-    
-    # Flask serverni asosiy potokda yurgizamiz (Render portni srazu ko'rishi uchun)
     run_flask()
