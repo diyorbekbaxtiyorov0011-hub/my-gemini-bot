@@ -1,3 +1,6 @@
+import flask
+import threading
+flask.Flask(__name__).route('/')(lambda: 'OK').__self__.run(host='0.0.0.0', port=10000, threading=True)
 import os
 import io
 import telebot
