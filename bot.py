@@ -2,7 +2,7 @@ import threading
 from flask import Flask
 import io
 import telebot
-import google.generativeai as genai  # Barqaror eski import usuli
+import google.generativeai as genai
 import time
 
 app = Flask('')
@@ -17,21 +17,19 @@ def run_flask():
 # Telegram Bot sozlamasi
 bot = telebot.TeleBot("8678420801:AAGN8Z0EkieIDSrhxXd6EaJX5r187Q49AAc")
 
-# Gemini sozlamasi (To'g'ri API kalit bilan)
+# Gemini sozlamasi
 genai.configure(api_key="AQ.Ab8RN6JLw41xz9wj_IBP9on21D6PaIMX8qH1sqPm12y2Cf-x2Q")
 model = genai.GenerativeModel("gemini-2.0-flash")
 
 @bot.message_handler(content_types=["text"])
 def reply(m):
     try:
-        # Kelgan matn asosida javob generatsiya qilish
         response = model.generate_content(m.text)
         bot.reply_to(m, response.text)
     except Exception as e:
         print(f"XABAR YUBORISHDA XATOLIK: {e}")
 
 def run_bot():
-    # Eski sessiyalarni majburiy tozalash
     try:
         bot.remove_webhook(drop_pending_updates=True)
         time.sleep(1)
