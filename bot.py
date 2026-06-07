@@ -15,7 +15,7 @@ def run_flask():
     app.run(host='0.0.0.0', port=10000)
 
 # Telegram Bot sozlamasi
-bot = telebot.TeleBot("8678420801:AAGN8Z0EkieIDSrhxXd6EaJX5r187Q49AAc")
+bot = telebot.TeleBot("8678420801:AAEVgWVFMa3aVECE4aPR7gMCuJYnFpf0ABk")
 
 # Gemini sozlamasi
 genai.configure(api_key="AQ.Ab8RN6JLw41xz9wj_IBP9on21D6PaIMX8qH1sqPm12y2Cf-x2Q")
