@@ -2,7 +2,7 @@ import threading
 from flask import Flask
 import io
 import telebot
-from google import genai  # Yangi rasmiy Google GenAI kutubxonasi
+import google.generativeai as genai  # Barqaror eski import usuli
 import time
 
 app = Flask('')
@@ -17,22 +17,21 @@ def run_flask():
 # Telegram Bot sozlamasi
 bot = telebot.TeleBot("8678420801:AAGN8Z0EkieIDSrhxXd6EaJX5r187Q49AAc")
 
-# Yangi Gemini klienti (Eng oxirgi versiya standarti)
-client = genai.Client(api_key="AQ.Ab8RN6JLw41xz9wj_IBP9on21D6PaIMX8qH1sqPm12y2Cf-x2Q")
+# Gemini sozlamasi (To'g'ri API kalit bilan)
+genai.configure(api_key="AQ.Ab8RN6JLw41xz9wj_IBP9on21D6PaIMX8qH1sqPm12y2Cf-x2Q")
+model = genai.GenerativeModel("gemini-2.0-flash")
 
 @bot.message_handler(content_types=["text"])
 def reply(m):
     try:
-        # Yangi versiyada matn generatsiya qilish formati:
-        response = client.models.generate_content(
-            model='gemini-2.0-flash',
-            contents=m.text,
-        )
+        # Kelgan matn asosida javob generatsiya qilish
+        response = model.generate_content(m.text)
         bot.reply_to(m, response.text)
     except Exception as e:
         print(f"XABAR YUBORISHDA XATOLIK: {e}")
 
 def run_bot():
+    # Eski sessiyalarni majburiy tozalash
     try:
         bot.remove_webhook(drop_pending_updates=True)
         time.sleep(1)
